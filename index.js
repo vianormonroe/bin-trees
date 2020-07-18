@@ -1,9 +1,9 @@
 export class Tree {
-  constructor () {
+  constructor() {
     this.root = null
   }
-  
-  insert (data) {
+
+  insert(data) {
     if (!Array.isArray(data))
       return console.error(
         `[TREE] can not be insert ${typeof data} to the tree`
@@ -12,35 +12,34 @@ export class Tree {
     this.root = new Peer(first)
     this.fill(rest)
   }
-  
-  _fill (data, step = 0, peer = this.root) {
+
+  _fill(data, step = 0, peer = this.root) {
     if (data[step] === undefined) return
-  	if (peer.isLeaf || peer.isUnmovable(data[step])) {
-    	peer[peer.getNextMove(data[step])] = new Peer(data[step])
+    if (peer.isLeaf || peer.isUnmovable(data[step])) {
+      peer[peer.getNextMove(data[step])] = new Peer(data[step])
       this.fill(data, step + 1)
-    }
-    else {
+    } else {
       this.fill(data, step, peer[peer.getNextMove(data[step])])
     }
-	}
+  }
 }
 
 class Peer {
-	constructor (value) {
-  	this.value = value
+  constructor(value) {
+    this.value = value
     this.left = null
     this.right = null
   }
-  
-  get isLeaf () {
-  	return this.left === null && this.right === null
-  }
-  
-  getNextMove (nextValue) {
-  	return nextValue >= this.value ? 'right' : 'left'
+
+  get isLeaf() {
+    return this.left === null && this.right === null
   }
 
-  isUnmovable (value) {
+  getNextMove(nextValue) {
+    return nextValue >= this.value ? 'right' : 'left'
+  }
+
+  isUnmovable(value) {
     return this[this.getNextMove(value)] === null
   }
 }
