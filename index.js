@@ -10,16 +10,16 @@ export class Tree {
       )
     const [first, ...rest] = data
     this.root = new Peer(first)
-    this.fill(rest)
+    this._fill(rest)
   }
 
   _fill(data, step = 0, peer = this.root) {
     if (data[step] === undefined) return
     if (peer.isLeaf || peer.isUnmovable(data[step])) {
       peer[peer.getNextMove(data[step])] = new Peer(data[step])
-      this.fill(data, step + 1)
+      this._fill(data, step + 1)
     } else {
-      this.fill(data, step, peer[peer.getNextMove(data[step])])
+      this._fill(data, step, peer[peer.getNextMove(data[step])])
     }
   }
 }
