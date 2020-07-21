@@ -1,6 +1,18 @@
-export class Tree {
+class Tree {
   constructor() {
     this.root = null
+  }
+
+  _result = {}
+
+  _fill(data, step = 0, peer = this.root) {
+    if (data[step] === undefined) return
+    if (peer.isLeaf || peer.isUnmovable(data[step])) {
+      peer[peer.getNextMove(data[step])] = new Peer(data[step])
+      this._fill(data, step + 1)
+    } else {
+      this._fill(data, step, peer[peer.getNextMove(data[step])])
+    }
   }
 
   insert(data) {
@@ -13,14 +25,15 @@ export class Tree {
     this._fill(rest)
   }
 
-  _fill(data, step = 0, peer = this.root) {
-    if (data[step] === undefined) return
-    if (peer.isLeaf || peer.isUnmovable(data[step])) {
-      peer[peer.getNextMove(data[step])] = new Peer(data[step])
-      this._fill(data, step + 1)
-    } else {
-      this._fill(data, step, peer[peer.getNextMove(data[step])])
+  flatten(deepObject = this.root, prefix = 'root') {
+    if (typeof deepObject === 'object' && deepObject !== null) {
+      this._result[prefix] = deepObject.value
+      Object.keys(deepObject).forEach(key => {
+        if (!deepObject.isLeaf)
+          this.flatten(deepObject[key], `${prefix}.${key}`)
+      })
     }
+    return this._result
   }
 }
 
@@ -43,3 +56,11 @@ class Peer {
     return this[this.getNextMove(value)] === null
   }
 }
+
+const unsortedArray = [7, 4, 12, 13, 5, 2, 81, 12, 6, 3, 8, 11, 11]
+
+let tree = new Tree()
+
+tree.insert(unsortedArray)
+
+tree.flatten()
