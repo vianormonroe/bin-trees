@@ -7,3 +7,5 @@ let tree = new Tree()
 tree.insert(unsortedArray)
 
 tree.flatten()
+
+tree.sort()

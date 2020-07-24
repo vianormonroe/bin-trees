@@ -4,6 +4,7 @@ export default class Tree {
   }
 
   _result = {}
+  _sorted = []
 
   _fill(data, step = 0, peer = this.root) {
     if (data[step] === undefined) return
@@ -34,6 +35,22 @@ export default class Tree {
       })
     }
     return this._result
+  }
+
+  sort(key = 'root') {
+    if (!this._result[key]) {
+      if (!Object.keys(this._result).length) return
+      else this.sort(Object.keys(this._result)[0])
+    }
+    if (this._result[key + '.left']) this.sort(key + '.left')
+    else {
+      if (this._result[key]) this._sorted.push(this._result[key])
+      delete this._result[key]
+      if (this._result[key + '.right']) this.sort(key + '.right')
+      else this.sort()
+    }
+
+    return this._sorted
   }
 }
 
